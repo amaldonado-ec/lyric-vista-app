@@ -6,7 +6,6 @@ export const songs: Song[] = [
     title: "Amazing Grace",
     artist: "John Newton",
     category: "Himnos Clásicos",
-    image: "/songs/amazing-grace.jpg",
     lyrics: `Amazing grace! How sweet the sound
 That saved a wretch like me!
 I once was lost, but now am found;
@@ -37,7 +36,6 @@ A life of joy and peace.`
     title: "How Great Thou Art",
     artist: "Carl Boberg",
     category: "Alabanza",
-    image: "/songs/how-great.jpg",
     lyrics: `O Lord my God, when I in awesome wonder
 Consider all the worlds Thy hands have made
 I see the stars, I hear the rolling thunder
@@ -68,7 +66,6 @@ And there proclaim, my God, how great Thou art`
     title: "Sublime Gracia",
     artist: "Tradicional",
     category: "Himnos Clásicos",
-    image: "/songs/sublime-gracia.jpg",
     lyrics: `Sublime gracia del Señor
 Que a mí, pecador, salvó
 Fui ciego, mas hoy veo yo
@@ -94,7 +91,6 @@ Su amor que me salvó`
     title: "Cuán Grande Es Él",
     artist: "Stuart K. Hine",
     category: "Alabanza",
-    image: "/songs/cuan-grande.jpg",
     lyrics: `Señor mi Dios, al contemplar los cielos
 El firmamento y las estrellas mil
 Al oír tu voz en los potentes truenos
@@ -120,7 +116,6 @@ De su poder y su infinito amor`
     title: "Roca de la Eternidad",
     artist: "Augustus Toplady",
     category: "Himnos Clásicos",
-    image: "/songs/roca-eternidad.jpg",
     lyrics: `Roca de la eternidad
 Fuiste abierta para mí
 Sé mi escondedero fiel
@@ -140,7 +135,6 @@ Deuda tal podré pagar`
     title: "A Dios Sea Gloria",
     artist: "Fanny Crosby",
     category: "Alabanza",
-    image: "/songs/dios-gloria.jpg",
     lyrics: `A Dios sea gloria por su gran amor
 Por darnos a Cristo el buen Salvador
 Quien dio en el Calvario por nuestra maldad

@@ -1,9 +1,10 @@
 import { Header } from "@/components/Header";
-import { SongCard } from "@/components/SongCard";
 import { songs } from "@/data/songs";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,17 +56,49 @@ const Index = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredSongs.map(song => (
-            <SongCard key={song.id} song={song} />
-          ))}
+        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">#</TableHead>
+                <TableHead>Título</TableHead>
+                <TableHead>Artista</TableHead>
+                <TableHead>Categoría</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredSongs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                    No se encontraron canciones
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredSongs.map((song) => (
+                  <TableRow key={song.id} className="hover:bg-accent/5 cursor-pointer">
+                    <TableCell className="font-medium text-muted-foreground">
+                      {song.id}
+                    </TableCell>
+                    <TableCell>
+                      <Link 
+                        to={`/song/${song.id}`} 
+                        className="font-semibold text-foreground hover:text-primary transition-colors"
+                      >
+                        {song.title}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{song.artist}</TableCell>
+                    <TableCell>
+                      <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent">
+                        {song.category}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </div>
-
-        {filteredSongs.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No se encontraron canciones</p>
-          </div>
-        )}
       </main>
     </div>
   );

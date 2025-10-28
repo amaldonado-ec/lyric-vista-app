@@ -3,6 +3,5 @@ export interface Song {
   title: string;
   artist: string;
   category: string;
-  image: string;
   lyrics: string;
 }
