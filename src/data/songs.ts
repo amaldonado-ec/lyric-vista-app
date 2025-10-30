@@ -13,6 +13,7 @@ const isBrowser = typeof window !== "undefined";
 
 let inMemorySongs: Song[] | null = null;
 let syncPromise: Promise<Song[]> | null = null;
+let lastChangeCheck = 0;
 
 type SongsMetadata = {
   lastSync: number;
@@ -236,18 +237,30 @@ export const loadSongs = async (): Promise<Song[]> => {
     return syncPromise;
   }
 
+  const now = Date.now();
+  const withinCacheWindow = now - lastChangeCheck < CACHE_TTL_MS;
+
+  if (withinCacheWindow) {
+    const cached = readCache();
+    const reuse = cached ?? initialSongs;
+    inMemorySongs = reuse;
+    return reuse;
+  }
+
   syncPromise = (async () => {
     const cached = readCache();
     const metadata = readMetadata();
     const timestamp = Date.now();
 
     if (!hasNetworkConnection()) {
+      lastChangeCheck = timestamp;
       const offlineResult = cached ?? initialSongs;
       inMemorySongs = offlineResult;
       return offlineResult;
     }
 
     const changeCheck = await checkForRemoteChanges(metadata);
+    lastChangeCheck = Date.now();
 
     if (!changeCheck.reachable) {
       const unreachableResult = cached ?? initialSongs;
