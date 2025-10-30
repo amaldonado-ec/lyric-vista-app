@@ -1,14 +1,57 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { songs } from "@/data/songs";
+import { getInitialSongs, loadSongs } from "@/data/songs";
+import { Song } from "@/types/song";
 import { Header } from "@/components/Header";
-import { ChevronLeft, Music2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const SongDetail = () => {
   const { id } = useParams();
-  const song = songs.find((s) => s.id === Number(id));
+  const [songs, setSongs] = useState<Song[]>(() => getInitialSongs());
+  const [syncComplete, setSyncComplete] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const syncSongs = async () => {
+      try {
+        const remoteSongs = await loadSongs();
+        if (isMounted) {
+          setSongs(remoteSongs);
+        }
+      } catch (error) {
+        console.warn("Using fallback songs due to sync error", error);
+      } finally {
+        if (isMounted) {
+          setSyncComplete(true);
+        }
+      }
+    };
+
+    syncSongs();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const numericId = Number(id);
+  const song = songs.find((s) => s.id === numericId);
 
   if (!song) {
+    if (!syncComplete) {
+      return (
+        <div className="min-h-screen bg-background">
+          <Header />
+          <div className="container py-12 px-4">
+            <p className="text-center text-muted-foreground">
+              Sincronizando canciones...
+            </p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-background">
         <Header />

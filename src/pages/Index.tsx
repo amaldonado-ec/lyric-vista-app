@@ -1,8 +1,9 @@
 import { Header } from "@/components/Header";
-import { songs } from "@/data/songs";
+import { getInitialSongs, loadSongs } from "@/data/songs";
+import { Song } from "@/types/song";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -18,6 +19,33 @@ const Index = () => {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [songs, setSongs] = useState<Song[]>(() => []);
+  const [isSyncing, setIsSyncing] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const syncSongs = async () => {
+      try {
+        const remoteSongs = await loadSongs();
+        if (isMounted) {
+          setSongs(remoteSongs);
+        }
+      } catch (error) {
+        console.warn("Using fallback songs due to sync error", error);
+      } finally {
+        if (isMounted) {
+          setIsSyncing(false);
+        }
+      }
+    };
+
+    syncSongs();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const filteredSongs = songs.filter(
     (song) =>
@@ -79,7 +107,9 @@ const Index = () => {
                     colSpan={4}
                     className="text-center py-12 text-muted-foreground"
                   >
-                    No se encontraron canciones
+                    {isSyncing
+                      ? "Sincronizando colección de canciones..."
+                      : "No se encontraron canciones"}
                   </TableCell>
                 </TableRow>
               ) : (
